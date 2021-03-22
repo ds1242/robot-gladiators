@@ -21,14 +21,14 @@ var fight = function(enemyName) {
         // subtract player attack from enemy health
         enemyHealth = enemyHealth - playerAttack;
         // Log resulting message to the console to know that it worked
-        console.log(enemyNames + " has " + enemyHealth + " health left");
+        console.log(enemyName + " has " + enemyHealth + " health left");
 
         // Check enemy health
         if (enemyHealth <= 0) {
-            window.alert(enemyNames + " has died! Good Fight!");
+            window.alert(enemyName + " has died! Good Fight!");
         }
         else {
-            window.alert(enemyNames + " still has " + enemyHealth + " health left.");
+            window.alert(enemyName + " still has " + enemyHealth + " health left.");
         }
 
         // subtract playerHealth from enemyAttack value

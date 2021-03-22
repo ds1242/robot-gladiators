@@ -4,13 +4,13 @@ var playerAttack = 10;
 var playerMoney = 10;
 
 // logging multiple values all at once like below:
-console.log(playerName, playerAttack, playerHealth);
 
-var enemyName = "Roborto";
+
+var enemyNames = ["Roborto", "Amy Android", "Robo Truble"];
 var enemyHealth = 50;
 var enemyAttack = 12;
 
-var fight = function() {
+var fight = function(enemyName) {
     // alert player that they are starting the round
     window.alert("Welcome to Robot Gladiators!");
     
@@ -21,14 +21,14 @@ var fight = function() {
         // subtract player attack from enemy health
         enemyHealth = enemyHealth - playerAttack;
         // Log resulting message to the console to know that it worked
-        console.log(enemyName + " has " + enemyHealth + " health left");
+        console.log(enemyNames + " has " + enemyHealth + " health left");
 
         // Check enemy health
         if (enemyHealth <= 0) {
-            window.alert(enemyName + " has died! Good Fight!");
+            window.alert(enemyNames + " has died! Good Fight!");
         }
         else {
-            window.alert(enemyName + " still has " + enemyHealth + " health left.");
+            window.alert(enemyNames + " still has " + enemyHealth + " health left.");
         }
 
         // subtract playerHealth from enemyAttack value
@@ -62,4 +62,6 @@ var fight = function() {
     }
 } ;
 
-fight();
+for(var i = 0; i < enemyNames.length; i++) {
+    fight(enemyNames[i]);
+}

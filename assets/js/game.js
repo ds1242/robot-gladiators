@@ -66,23 +66,52 @@ var fight = function(enemyName) {
     }
 } ;
 
-for(var i = 0; i < enemyNames.length; i++) {
-    // let's player know what round they are in
-    if(playerHealth > 0){
-        window.alert("Welcome to Robot Gladiators! Round " + (i + 1) );
+
+
+var startGame = function() {
+    playerHealth = 100;
+    playerAttack = 10;
+    playerMoney = 10;
+    for(var i = 0; i < enemyNames.length; i++) {
+        // let's player know what round they are in
+        if(playerHealth > 0){
+            window.alert("Welcome to Robot Gladiators! Round " + (i + 1) );
+        }
+        else {
+            window.alert("You have lost your robot in battle! Game Over!");
+            break;
+        }
+
+        var pickedEnemyName = enemyNames[i];
+        // reset enemy health  here
+        enemyHealth = 50;
+
+        // debugger to check code here
+        // debugger;
+
+        // pass the pickedEnemyName variable's value into the fight function where it will assume the enemyName parameter
+        fight(pickedEnemyName);
+        }
+        // start again
+        endGame();
+    
+};
+
+var endGame = function(){
+    if(playerAttack > 0){
+        window.alert("Great Job! You  have survived the game.  You now have a score of " + playerMoney + ".");
+    } else {
+        window.alert("You lost your robot in battle");
     }
-    else {
-        window.alert("You have lost your robot in battle! Game Over!");
-        break;
+    // ask if they want to play again 
+    var playAgainConfirm = confirm("Would you like to play again?");
+    if(playAgainConfirm){
+        // start again if they do want to play again 
+        startGame();
+    } else {
+        // end the game if they do not.
+        window.alert("Thanks for playing. Come again soon!");
     }
+};
 
-    var pickedEnemyName = enemyNames[i];
-    // reset enemy health  here
-    enemyHealth = 50;
-
-    // debugger to check code here
-    // debugger;
-
-    // pass the pickedEnemyName variable's value into the fight function where it will assume the enemyName parameter
-    fight(pickedEnemyName);
-}
+startGame();

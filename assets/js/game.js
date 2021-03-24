@@ -10,12 +10,13 @@ var fightOrSkip = function(){
   
 
   // Conditional Recursive Function Call
-if (!promptFight) {
+if (promptFight === "" || promptFight === "null") {
     window.alert("You need to provide a valid answer! Please try again.");
     return fightOrSkip();
   }
   //lower case to reduce number of items to check
   promptFight = promptFight.toLocaleLowerCase();
+
   // if player picks "skip" confirm and then stop the loop
   if (promptFight === "skip") {
     // confirm player wants to skip
@@ -34,17 +35,34 @@ if (!promptFight) {
 
 
 var fight = function(enemy) {
-    
-    while(enemy.health > 0 && playerInfo.health > 0){
-        fightOrSkip();
-        
-        // console.log(promptFight);
-       
+    // keep track of who goes first
+    var isPlayerTurn = true;
+    // randomly assign turn order
+    if(Math.random() > 0.5){
+        isPlayerTurn = false;
+    }
+
+    while (playerInfo.health > 0 && enemy.health > 0) {
+        if(isPlayerTurn){
+            //ask if the want to fight or skip 
+            if(fightOrSkip()){
+                break;
+            }
             // subtract player attack from enemy health
             var damage = randomNumber(playerInfo.attack - 3, playerInfo.attack);
+
             enemy.health = Math.max(0, enemy.health - damage);
             // Log resulting message to the console to know that it worked
-            console.log(enemy.name + " has " + enemy.health + " health left");
+            console.log(
+                playerInfo.name +
+                " attacked " +
+                enemy.name +
+                ". " +
+                enemy.name +
+                " now has " +
+                enemy.health +
+                " health remaining."
+            );
 
             // Check enemy health
             if (enemy.health <= 0) {
@@ -53,30 +71,39 @@ var fight = function(enemy) {
                 // award money for winning the fight
                 playerInfo.money = playerInfo.money + 20;
                 break;
-            }
-            else {
+            } else {
                 window.alert(enemy.name + " still has " + enemy.health + " health left.");
             }
-
+        } else { 
             // subtract playerInfo.health from enemy.attack value
             var damage = randomNumber(enemy.attack - 3, enemy.attack);
 
             playerInfo.health = Math.max(0, playerInfo.health - damage);
             // Log resulting message to the console to know that it worked
-            console.log(playerInfo.name + " has " + playerInfo.health + " health left");
+            console.log(
+                enemy.name +
+                  " attacked " +
+                  playerInfo.name +
+                  ". " +
+                  playerInfo.name +
+                  " now has " +
+                  playerInfo.health +
+                  " health remaining."
+              );
 
             // check player health
             if (playerInfo.health <= 0){
                 window.alert(playerInfo.name + " has died!");
                 break;
-            }
-            else {
+            } else {
                 window.alert(playerInfo.name + " has " + playerInfo.health + " health left.");
             }
-        
+        }
+        isPlayerTurn = !isPlayerTurn;
         // else {
         //     window.alert("You must choose a valid option. Please try again!");
         // }
+    
     }
 } ;
 
@@ -85,38 +112,40 @@ var fight = function(enemy) {
 var startGame = function() {
     // reset player stats
     playerInfo.reset();
+    // fight each roboto by looping through them
+    
     for(var i = 0; i < enemyInfo.length; i++) {
+        // check for player stats
+        console.log(playerInfo);
         // let's player know what round they are in
-        if(playerInfo.health > 0){
-            window.alert("Welcome to Robot Gladiators! Round " + (i + 1) );
-        }
+        if (playerInfo.health > 0){
+            // inform player what round they are in
+            window.alert("Welcome to Robot Gladiators! Round " + (i + 1));
+
+            var pickedEnemyObj = enemyInfo[i];
+                // reset enemy health  here
+            pickedEnemyObj.health = randomNumber(40, 60);
+            
+            console.log(pickedEnemyObj);
+            // pass the pickedEnemyName variable's value into the fight function where it will assume the enemy.name parameter
+            fight(pickedEnemyObj);
+        
+            // if we are not one the last enemy, enter shop
+            if(playerInfo.health > 0 && i < enemyInfo.length - 1){
+                // ask the player if they would like to enter the shop
+                var storeConfirm = window.confirm("The fight is over, would you like to enter the shop?");
+                if(storeConfirm){
+                    shop();
+                }   
+            }   
+        }  
         else {
+            // if player is not alive break the loop
             window.alert("You have lost your robot in battle! Game Over!");
             break;
-        }
-
-        var pickedEnemyObj = enemyInfo[i];
-        // reset enemy health  here
-       pickedEnemyObj.health = randomNumber(40, 60);
-       console.log(pickedEnemyObj);
-
-        // debugger to check code here
-        // debugger;
-
-        // pass the pickedEnemyName variable's value into the fight function where it will assume the enemy.name parameter
-        fight(pickedEnemyObj);
-
-        // if we are not one the last enemy, enter shop
-        if(playerInfo.health > 0 && i < enemyInfo.length - 1){
-            // ask the player if they would like to enter the shop
-            var storeConfirm = window.confirm("The fight is over, would you like to enter the shop?");
-            if(storeConfirm){
-                shop();
-            };
-        }
-    }   
-    endGame();
-    
+        } 
+    }
+    endGame();    
 };
 
 var endGame = function(){
@@ -138,7 +167,9 @@ var endGame = function(){
 
 var shop = function(){
     var shopOptionPrompt = window.prompt("Would you like to REFILL your health, UPGRADE your attack, or LEAVE the store? Please enter one: 1 for REFILL, 2 for UPGRADE, or 3 to LEAVE.");
+    // convert answer to actual number
     shopOptionPrompt = parseInt(shopOptionPrompt);
+
     switch(shopOptionPrompt){
         case 1: 
             //refill player's health
@@ -159,18 +190,13 @@ var shop = function(){
 };
 var getPlayerName = function() {
     var name = "";
+
     while (name === "" || name === null){
         name = prompt("What is your robot's name?");        
     }
     console.log("Your robot's name is " + name);
     return name;
 };
-
-var randomNumber = function(max, min){
-    var value = Math.floor(Math.random() + (max - min + 1)) + min;
-
-    return value;
-}
 
 var playerInfo = {
     name: getPlayerName(),
@@ -202,9 +228,6 @@ var playerInfo = {
         }
     }
 };
-
-
-
 var enemyInfo = [
     {
         name:"Roberto",

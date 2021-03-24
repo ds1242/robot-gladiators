@@ -25,7 +25,7 @@ var fight = function(enemyName) {
             if (confirmSkip) {
                 window.alert(playerName + " has chosen to skip the fight.");
                 // subtract money for skipping fight
-                playerMoney = playerMoney - 10;
+                playerMoney = Math.max(0, playerMoney - 10);
                 console.log("playerMoney", playerMoney);
                 break;
             }
@@ -33,13 +33,17 @@ var fight = function(enemyName) {
         if (promptFight === 'fight' || promptFight === "FIGHT"){
         
             // subtract player attack from enemy health
-            enemyHealth = enemyHealth - playerAttack;
+            var damage = randomNumber(playerAttack - 3, playerAttack);
+            enemyHealth = Math.max(0, enemyHealth - damage);
             // Log resulting message to the console to know that it worked
             console.log(enemyName + " has " + enemyHealth + " health left");
 
             // Check enemy health
             if (enemyHealth <= 0) {
                 window.alert(enemyName + " has died! Good Fight!");
+
+                // award money for winning the fight
+                playerMoney = playerMoney + 20;
                 break;
             }
             else {
@@ -47,7 +51,9 @@ var fight = function(enemyName) {
             }
 
             // subtract playerHealth from enemyAttack value
-            playerHealth = playerHealth - enemyAttack;
+            var damage = randomNumber(enemyAttack - 3, enemyAttack);
+
+            playerHealth = Math.max(0, playerHealth - damage);
             // Log resulting message to the console to know that it worked
             console.log(playerName + " has " + playerHealth + " health left");
 
@@ -84,7 +90,7 @@ var startGame = function() {
 
         var pickedEnemyName = enemyNames[i];
         // reset enemy health  here
-        enemyHealth = 50;
+        enemyHealth = randomNumber(40, 60);
 
         // debugger to check code here
         // debugger;
@@ -101,7 +107,7 @@ var startGame = function() {
             };
         }
     }   
-    
+    endGame();
     
 };
 
@@ -158,4 +164,10 @@ var shop = function(){
             break;
     }
 };
+
+var randomNumber = function(max, min){
+    var value = Math.floor(Math.random() + (max - min + 1)) + min;
+
+    return value;
+}
 startGame();

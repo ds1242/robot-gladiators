@@ -15,7 +15,7 @@ if (promptFight === "" || promptFight === "null") {
     return fightOrSkip();
   }
   //lower case to reduce number of items to check
-  promptFight = promptFight.toLocaleLowerCase();
+  promptFight = promptFight.toLowerCase();
 
   // if player picks "skip" confirm and then stop the loop
   if (promptFight === "skip") {
